@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:todo_app_rest_api_crud/screens/add_page.dart';
 import 'package:todo_app_rest_api_crud/services/todo_service.dart';
+import 'package:todo_app_rest_api_crud/widgets/todo_card.dart';
 import '../utils/snackbar_helper.dart';
 
 class TodoListPage extends StatefulWidget {
@@ -47,36 +48,12 @@ class _TodoListPageState extends State<TodoListPage> {
                 padding: EdgeInsets.all(8),
                 itemBuilder: (context,index){
                   final item = items[index];
-                  final id = item['_id'] as String;
-                return Card(
-                  child: ListTile(
-                    leading: CircleAvatar(child: Text('${index + 1}')),
-                    title: Text(item['title']),
-                    subtitle: Text(item['description']),
-                    trailing: PopupMenuButton(
-                      onSelected: (value) {
-                        if (value == 'edit') {
-                          //open edit page
-                          navigateToEditPage(item);
-                        } else if(value == 'delete'){
-                          //delete and remove item
-                          deletebyId(id);
-                        }
-                      },
-                      itemBuilder: (context){
-                        return [
-                          PopupMenuItem(
-                            child: Text('Edit'),
-                            value: 'edit',
-                            ),
-                          PopupMenuItem(
-                            child: Text('Delete'),
-                            value: 'delete',
-                            ),
-                        ];
-                      },
-                    ),
-                    ),
+                  //final id = item['_id'] as String;
+                return TodoCard(
+                  index: index, 
+                  item: item, 
+                  navigateEdit: navigateToEditPage, 
+                  deletebyId: deletebyId
                 );
                 },
               ),
