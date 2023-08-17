@@ -12,6 +12,7 @@ class TodoListPage extends StatefulWidget {
 }
 
 class _TodoListPageState extends State<TodoListPage> {
+  bool isLoading = true;
   List items = [];
 
   @override
@@ -27,18 +28,22 @@ class _TodoListPageState extends State<TodoListPage> {
       appBar: AppBar(
         title: Text('Todo List'),
       ),
-      body: RefreshIndicator(
-        onRefresh: fetchTodo,
-        child: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context,index){
-            final item = items[index];
-          return ListTile(
-            leading: CircleAvatar(child: Text('${index + 1}')),
-            title: Text(item['title']),
-            subtitle: Text(item['description']),
-            );
-          },
+      body: Visibility(
+        visible: isLoading,
+        child: Center(child: CircularProgressIndicator(),),
+        replacement: RefreshIndicator(
+          onRefresh: fetchTodo,
+          child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context,index){
+              final item = items[index];
+            return ListTile(
+              leading: CircleAvatar(child: Text('${index + 1}')),
+              title: Text(item['title']),
+              subtitle: Text(item['description']),
+              );
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -63,9 +68,12 @@ class _TodoListPageState extends State<TodoListPage> {
       setState(() {
         items = result;
       });
-    } else {
-      //final
-    }
+    } 
+    
+      setState(() {
+        isLoading=false;
+      });
+    
     print(response.statusCode);
     print(response.body);
   }
