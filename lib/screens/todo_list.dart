@@ -46,6 +46,7 @@ class _TodoListPageState extends State<TodoListPage> {
                 onSelected: (value) {
                   if (value == 'edit') {
                     //open edit page
+                    navigateToEditPage(item);
                   } else if(value == 'delete'){
                     //delete and remove item
                     deletebyId(id);
@@ -72,6 +73,17 @@ class _TodoListPageState extends State<TodoListPage> {
       floatingActionButton: FloatingActionButton.extended(
           onPressed: navigateToAddPage, label: Text('Add Todo')),
     );
+  }
+
+  Future<void> navigateToEditPage(Map item) async {
+    final route = MaterialPageRoute(
+      builder: (context) => AddTodoPage(todo: item),
+    );
+    await Navigator.push(context, route);
+    setState(() {
+      isLoading=true;
+    });
+    fetchTodo();
   }
 
   void navigateToAddPage() {
