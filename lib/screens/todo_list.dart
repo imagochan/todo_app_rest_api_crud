@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:todo_app_rest_api_crud/screens/add_page.dart';
@@ -17,7 +18,6 @@ class _TodoListPageState extends State<TodoListPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     fetchTodo();
     super.initState();
   }
@@ -33,40 +33,48 @@ class _TodoListPageState extends State<TodoListPage> {
         child: Center(child: CircularProgressIndicator(),),
         replacement: RefreshIndicator(
           onRefresh: fetchTodo,
-          child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context,index){
-              final item = items[index];
-              final id = item['_id'] as String;
-            return ListTile(
-              leading: CircleAvatar(child: Text('${index + 1}')),
-              title: Text(item['title']),
-              subtitle: Text(item['description']),
-              trailing: PopupMenuButton(
-                onSelected: (value) {
-                  if (value == 'edit') {
-                    //open edit page
-                    navigateToEditPage(item);
-                  } else if(value == 'delete'){
-                    //delete and remove item
-                    deletebyId(id);
-                  }
-                },
-                itemBuilder: (context){
-                  return [
-                    PopupMenuItem(
-                      child: Text('Edit'),
-                      value: 'edit',
-                      ),
-                    PopupMenuItem(
-                      child: Text('Delete'),
-                      value: 'delete',
-                      ),
-                  ];
-                },
-              ),
-              );
-            },
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+              }
+            ),
+            child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context,index){
+                final item = items[index];
+                final id = item['_id'] as String;
+              return ListTile(
+                leading: CircleAvatar(child: Text('${index + 1}')),
+                title: Text(item['title']),
+                subtitle: Text(item['description']),
+                trailing: PopupMenuButton(
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      //open edit page
+                      navigateToEditPage(item);
+                    } else if(value == 'delete'){
+                      //delete and remove item
+                      deletebyId(id);
+                    }
+                  },
+                  itemBuilder: (context){
+                    return [
+                      PopupMenuItem(
+                        child: Text('Edit'),
+                        value: 'edit',
+                        ),
+                      PopupMenuItem(
+                        child: Text('Delete'),
+                        value: 'delete',
+                        ),
+                    ];
+                  },
+                ),
+                );
+              },
+            ),
           ),
         ),
       ),
