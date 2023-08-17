@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:todo_app_rest_api_crud/screens/add_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_app_rest_api_crud/services/todo_service.dart';
 
 class TodoListPage extends StatefulWidget {
   const TodoListPage({super.key});
@@ -114,10 +115,8 @@ class _TodoListPageState extends State<TodoListPage> {
 
   Future<void> deletebyId(String id) async{
     //delete item
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.delete(uri);
-    if(response.statusCode == 200){
+    final isSuccess = await TodoService.deletebyId(id);//new call belongs to todo service
+    if(isSuccess){
       //remove item from list
       
       final filtered = items.where((element) => element['_id'] != id).toList();
@@ -131,23 +130,21 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   Future<void> fetchTodo() async{
-    final url = 'https://api.nstack.in/v1/todos?page=1&limit=10';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as Map;
-      final result = json['items'] as List;
+    final response = await TodoService.fetchTodos();
+
+    if (response !=null) {
       setState(() {
-        items = result;
+        items = response;
       });
-    } 
+    } else {
+      showErrorMessage('something went wrong');
+    }
+    setState(() {
+      isLoading=false;
+    });
     
-      setState(() {
-        isLoading=false;
-      });
-    
-    print(response.statusCode);
-    print(response.body);
+    //print(response.statusCode);
+    //print(response.body);
   }
 
   //  void showSuccessMessage(String message){
