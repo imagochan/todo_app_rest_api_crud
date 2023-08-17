@@ -86,11 +86,15 @@ class _TodoListPageState extends State<TodoListPage> {
     fetchTodo();
   }
 
-  void navigateToAddPage() {
+  Future<void> navigateToAddPage() async{
     final route = MaterialPageRoute(
       builder: (context) => AddTodoPage(),
     );
-    Navigator.push(context, route);
+    await Navigator.push(context, route);
+    setState(() {
+      isLoading=true;
+    });
+    fetchTodo();
   }
 
   Future<void> deletebyId(String id) async{
