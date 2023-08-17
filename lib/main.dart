@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app_rest_api_crud/screens/todo_list.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,6 +10,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: TodoListPage(),
+    );
   }
 }
