@@ -1,7 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:todo_app_rest_api_crud/services/todo_service.dart';
+
+import '../utils/snackbar_helper.dart';
 
 class AddTodoPage extends StatefulWidget {
   final Map? todo;
@@ -78,25 +78,21 @@ class _AddTodoPageState extends State<AddTodoPage> {
     }
     final id = todo['_id'];
     //final isCompleted = todo['is_completed'];
-    final title = titleController.text;
-    final description = descriptionController.text;
-    final body = {
-      "title": title,
-      "description":description,
-      "is_completed":false,
-    };
+    // final title = titleController.text;
+    // final description = descriptionController.text;
+    // final body = {
+    //   "title": title,
+    //   "description":description,
+    //   "is_completed":false,
+    // };
     // Submit data to the server
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.put(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'}
-      );
+    //final url = 'https://api.nstack.in/v1/todos/$id';
+    //final uri = Uri.parse(url);
+    final isSuccess = await TodoService.updateTodo(id,body);
       // show success or fail message based on status
-    print(response.statusCode);
+    //print(response.statusCode);
     
-    if (response.statusCode == 200) {
+    if (isSuccess) {
       //print('Creation Success');
       //titleController.text = '';
       //descriptionController.text = '';
@@ -104,32 +100,28 @@ class _AddTodoPageState extends State<AddTodoPage> {
       //print(response.body);
     } else {
       //print('Creation Failed');
-      showErrorMessage('Update Failed');
+      showErrorMessage(context,message:'Update Failed');
       //print(response.body);
     }
   }
 
   Future<void> submitData() async{
     // Get the data from form
-    final title = titleController.text;
-    final description = descriptionController.text;
-    final body = {
-      "title": title,
-      "description":description,
-      "is_completed":false,
-    };
+    // final title = titleController.text;
+    // final description = descriptionController.text;
+    // final body = {
+    //   "title": title,
+    //   "description":description,
+    //   "is_completed":false,
+    // };
     // Submit data to the server
-    final url = 'https://api.nstack.in/v1/todos';
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'}
-      );
+    // final url = 'https://api.nstack.in/v1/todos';
+    // final uri = Uri.parse(url);
+    final isSuccess = await TodoService.addTodo(body);
     // show success or fail message based on status
-    print(response.statusCode);
+    //print(response.statusCode);
     
-    if (response.statusCode == 201) {
+    if (isSuccess) {
       //print('Creation Success');
       titleController.text = '';
       descriptionController.text = '';
@@ -137,7 +129,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
       //print(response.body);
     } else {
       //print('Creation Failed');
-      showErrorMessage('Creation Failed');
+      showErrorMessage(context, message: 'Creation Failed');
       //print(response.body);
     }
   }
@@ -147,11 +139,13 @@ class _AddTodoPageState extends State<AddTodoPage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void showErrorMessage(String message){
-    final snackBar = SnackBar(
-      content: Text(message,style: TextStyle(color:Colors.white),),
-      backgroundColor: Colors.red,
-      );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  Map get body {
+    final title = titleController.text;
+    final description = descriptionController.text;
+    return {
+      "title": title,
+      "description":description,
+      "is_completed":false,
+    };
   }
 }
