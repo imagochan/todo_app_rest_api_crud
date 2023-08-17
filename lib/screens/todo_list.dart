@@ -27,16 +27,19 @@ class _TodoListPageState extends State<TodoListPage> {
       appBar: AppBar(
         title: Text('Todo List'),
       ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context,index){
-          final item = items[index];
-        return ListTile(
-          leading: CircleAvatar(child: Text('${index + 1}')),
-          title: Text(item['title']),
-          subtitle: Text(item['description']),
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: fetchTodo,
+        child: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context,index){
+            final item = items[index];
+          return ListTile(
+            leading: CircleAvatar(child: Text('${index + 1}')),
+            title: Text(item['title']),
+            subtitle: Text(item['description']),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
           onPressed: navigateToAddPage, label: Text('Add Todo')),
