@@ -40,40 +40,44 @@ class _TodoListPageState extends State<TodoListPage> {
                 PointerDeviceKind.mouse,
               }
             ),
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context,index){
-                final item = items[index];
-                final id = item['_id'] as String;
-              return ListTile(
-                leading: CircleAvatar(child: Text('${index + 1}')),
-                title: Text(item['title']),
-                subtitle: Text(item['description']),
-                trailing: PopupMenuButton(
-                  onSelected: (value) {
-                    if (value == 'edit') {
-                      //open edit page
-                      navigateToEditPage(item);
-                    } else if(value == 'delete'){
-                      //delete and remove item
-                      deletebyId(id);
-                    }
-                  },
-                  itemBuilder: (context){
-                    return [
-                      PopupMenuItem(
-                        child: Text('Edit'),
-                        value: 'edit',
-                        ),
-                      PopupMenuItem(
-                        child: Text('Delete'),
-                        value: 'delete',
-                        ),
-                    ];
-                  },
-                ),
-                );
-              },
+            child: Visibility(
+              visible: items.isNotEmpty,
+              replacement: Center(child: Text('No Todo Items',style: Theme.of(context).textTheme.headlineMedium,)),
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context,index){
+                  final item = items[index];
+                  final id = item['_id'] as String;
+                return ListTile(
+                  leading: CircleAvatar(child: Text('${index + 1}')),
+                  title: Text(item['title']),
+                  subtitle: Text(item['description']),
+                  trailing: PopupMenuButton(
+                    onSelected: (value) {
+                      if (value == 'edit') {
+                        //open edit page
+                        navigateToEditPage(item);
+                      } else if(value == 'delete'){
+                        //delete and remove item
+                        deletebyId(id);
+                      }
+                    },
+                    itemBuilder: (context){
+                      return [
+                        PopupMenuItem(
+                          child: Text('Edit'),
+                          value: 'edit',
+                          ),
+                        PopupMenuItem(
+                          child: Text('Delete'),
+                          value: 'delete',
+                          ),
+                      ];
+                    },
+                  ),
+                  );
+                },
+              ),
             ),
           ),
         ),
