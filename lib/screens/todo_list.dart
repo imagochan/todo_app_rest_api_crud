@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:todo_app_rest_api_crud/screens/add_page.dart';
-import 'package:http/http.dart' as http;
 import 'package:todo_app_rest_api_crud/services/todo_service.dart';
+import '../utils/snackbar_helper.dart';
 
 class TodoListPage extends StatefulWidget {
   const TodoListPage({super.key});
@@ -125,7 +123,7 @@ class _TodoListPageState extends State<TodoListPage> {
       });
     } else {
       //show error
-      showErrorMessage('Deletion Failed');
+      showErrorMessage(context,message:'Deletion failed');
     }
   }
 
@@ -137,7 +135,7 @@ class _TodoListPageState extends State<TodoListPage> {
         items = response;
       });
     } else {
-      showErrorMessage('something went wrong');
+      showErrorMessage(context,message:'something went wrong');
     }
     setState(() {
       isLoading=false;
@@ -152,11 +150,11 @@ class _TodoListPageState extends State<TodoListPage> {
   //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
   //}
 
-  void showErrorMessage(String message){
-    final snackBar = SnackBar(
-      content: Text(message,style: TextStyle(color:Colors.white),),
-      backgroundColor: Colors.red,
-      );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  // void showErrorMessage(String message){
+  //   final snackBar = SnackBar(
+  //     content: Text(message,style: TextStyle(color:Colors.white),),
+  //     backgroundColor: Colors.red,
+  //     );
+  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  // }
 }
